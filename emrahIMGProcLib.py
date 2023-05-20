@@ -70,7 +70,57 @@ def add_black_border(image, border_size=20):
     return border_image
 
 
-  
+
+
+#This function takes in YOLO flat tape segmentation results and a maximum x value as input. 
+#It extracts the x-coordinates of the bounding boxes from the segmentation results, 
+#sorts them in ascending order, and stores them in an array. 
+#The function then checks for consecutive x-values that have a difference of less than 5% and computes their average. 
+#If the average value falls outside the range of 0 to max_x, it is clipped to that range. 
+#The final averaged x-coordinates are stored in an array and returned by the function.
+def get_x_coords_from_yolo_segmentation_results(results, max_x):
+  # Get the tensor of bounding box coordinates
+  boxes = results[0].boxes.data
+
+  # Initialize a list to store x-coordinates
+  x_coords = []
+
+  # Iterate over the rows of the tensor and extract x-coordinates
+  for i in range(boxes.shape[0]):
+      x1 = int(boxes[i][0].item())
+      x2 = int(boxes[i][2].item())
+      x_coords.extend([x1, x2])
+
+  # Sort the array in ascending order
+  x_coords_sorted = np.sort(x_coords)
+
+  # Initialize a list to store the final x-coordinates
+  final_x_coords = []
+
+  # Initialize variables to store the start and end index of the current group of values
+  start_idx = 0
+  end_idx = 0
+
+  # Loop through the sorted array
+  while end_idx < len(x_coords_sorted):
+      # Check if the difference between the current and next value is less than 5%
+      if end_idx+1 < len(x_coords_sorted) and (x_coords_sorted[end_idx+1] - x_coords_sorted[end_idx])/x_coords_sorted[end_idx] < 0.05:
+          # If so, increment the end index and continue
+          end_idx += 1
+      else:
+          # If not, compute the average of the values in the current group and append to the final list
+          avg_val = int(np.mean(x_coords_sorted[start_idx:end_idx+1]))
+          avg_val = max(min(avg_val,max_x),0)
+          final_x_coords.append(avg_val)
+          # Reset the start and end index for the next group
+          start_idx = end_idx + 1
+          end_idx = start_idx
+
+  # Print the resulting array
+  return final_x_coords
+
+
+
 #input is a random size image, and makes it square by adding 
 #black contours around the image
 def convert_to_square_image(img):
