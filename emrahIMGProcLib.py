@@ -74,10 +74,11 @@ def prepare_for_inference(img,target_size,segmentation_model):
 
 
 #siamese model with trained weights, and extractor
-def create_and_load_siamese_model_with_extractor(input_shape, weights='imagenet', model_weights_path=None):
+def create_and_load_siamese_model_with_extractor(input_shape, model_weights_path=None):
     
     # Load the pretrained model
-    base_model = Xception(weights=weights, include_top=False, input_shape=input_shape)
+    # we will later replace imagenet
+    base_model = Xception(weights='imagenet', include_top=False, input_shape=input_shape)
     
     #Some unfrozen weights on the Xception model
     trainable = False
