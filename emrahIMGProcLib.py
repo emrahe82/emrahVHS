@@ -9,6 +9,58 @@ import h5py
 BASE_LINK_FOR_VHSCOLLECT_IMAGES = "https://vhscollector.com/sites/default/files/vhsimages/"
 WORK_WITH_URL = False
 
+
+#Reads OCR from the given image path
+def grabOCR(IMAGE_PATH):
+    # Check if the image file exists
+    if not os.path.isfile(IMAGE_PATH):
+        raise ValueError(f"The file '{IMAGE_PATH}' does not exist.")
+
+    # Load the image file
+    with io.open(IMAGE_PATH, 'rb') as image_file:
+        content = image_file.read()
+
+    # Create a Vision API image object
+    image = types.Image(content=content)
+
+    # Detect text in the image
+    try:
+        response = vision_client.text_detection(image=image)
+        texts = response.text_annotations
+    except Exception as e:
+        raise ValueError(f"Error detecting text in image - Vision AI: {e}")
+        return "",""
+
+    # Print the detected text
+    output = ""
+    for text in texts:
+        output += text.description + " "
+    return output.strip(),response
+    
+#Splits the OCR according to given x coordinates
+#if a combined image was fed to the OCR (to save tokens)
+def splitOCRAccordingtoCoordinates(response,x_coords):
+  n=len(x_coords)-1
+  OCRTextPartialLists=[[] for _ in range(n)]
+  #print(OCRTextPartialLists)
+
+  for i,annotation in enumerate(response.text_annotations):
+    if(i>0):
+      #print(annotation.description)
+      vertices = np.array([(v.x, v.y) for v in annotation.bounding_poly.vertices], dtype=np.int32)
+      center = tuple(vertices.mean(axis=0).astype(np.int32))
+      #print(center)
+      index = next((i for i, x in enumerate(x_coords) if x > center[0]), len(x_coords))-1
+      #print(index)
+      if(index>(n-1)):
+        index=n-1
+      elif(index<0):
+        index=0
+      (OCRTextPartialLists[index]).append(annotation.description)
+  return OCRTextPartialLists
+
+
+
 #this function reads from google drive backup images
 #instead of vhscollector.com . if fails, tries from the url anyway
 def readImagesFrom_googledrive_backup_images(imageLinks):
