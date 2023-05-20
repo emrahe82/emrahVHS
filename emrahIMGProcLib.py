@@ -78,7 +78,14 @@ def create_and_load_siamese_model_with_extractor(input_shape, weights='imagenet'
     
     # Load the pretrained model
     base_model = Xception(weights=weights, include_top=False, input_shape=input_shape)
-
+    
+    #Some unfrozen weights on the Xception model
+    trainable = False
+    for layer in base_model.layers:
+        if layer.name == "block14_sepconv1":
+            trainable = True
+        layer.trainable = trainable
+    
     # Add a GlobalAveragePooling2D layer after the base model
     gap = lyr.GlobalAveragePooling2D()
 
