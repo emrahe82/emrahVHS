@@ -7,6 +7,7 @@ import cv2
 import h5py
 
 
+
 def check_weights_dimensions(weights_file):
     # Open the weights file.
     with h5py.File(weights_file, 'r') as f:
@@ -19,6 +20,7 @@ def check_weights_dimensions(weights_file):
                     print("    - {0:<12}: {1}".format(p_name, param.shape))
 
 
+                    
 #add specific sized black border around input iamge
 def add_black_border(image, border_size=20):
     if image is None:
