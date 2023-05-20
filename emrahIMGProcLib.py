@@ -7,7 +7,7 @@ import cv2
 import h5py
 
 BASE_LINK_FOR_VHSCOLLECT_IMAGES = "https://vhscollector.com/sites/default/files/vhsimages/"
-
+WORK_WITH_URL = False
 
 #this function reads from google drive backup images
 #instead of vhscollector.com . if fails, tries from the url anyway
