@@ -20,7 +20,7 @@ def check_weights_dimensions(weights_file):
 
 
 #add specific sized black border around input iamge
-def add_black_border(image, border_size):
+def add_black_border(image, border_size=20):
     if image is None:
         return None
 
@@ -74,7 +74,7 @@ def segmentOutImageMinimalBorder(img,yolo_results):
   return None
 
 
-def prepare_for_inference(img,target_size,border_size=20,segmentation_model):
+def prepare_for_inference(img,target_size,border_size,segmentation_model):
   img=add_black_border(img, border_size) #first add a black border around, maybe needed for vhscollector images. for increasing segmentation accuracy
   segmentation_results=segmentation_model.predict(img)
   a=segmentOutImageMinimalBorder(img,segmentation_results[0]) #crop out the segmented image
