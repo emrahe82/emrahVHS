@@ -19,6 +19,16 @@ def check_weights_dimensions(weights_file):
                     print("    - {0:<12}: {1}".format(p_name, param.shape))
 
 
+#add specific sized black border around input iamge
+def add_black_border(image, border_size):
+    if image is None:
+        return None
+
+    # Add a black border of specified size
+    border_image = cv2.copyMakeBorder(image, border_size, border_size, border_size, border_size, cv2.BORDER_CONSTANT, None, value=0)
+    return border_image
+
+
 #input is a random size image, and makes it square by adding 
 #black contours around the image
 def convert_to_square_image(img):
