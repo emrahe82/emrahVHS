@@ -2,7 +2,8 @@ from keras.applications import Xception
 from keras import layers as lyr
 from keras.models import Model
 from keras import backend as K
-    
+import numpy as np
+import cv2
 
 #input is a random size image, and makes it square by adding 
 #black contours around the image
