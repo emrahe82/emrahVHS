@@ -51,7 +51,8 @@ def convert_to_square_image(img):
     square_img[y:y+height, x:x+width] = img
     return square_img
 
-#crops out the image   
+#crops out the image  
+#works only if image is frontvhs, else return none!
 def segmentOutImageMinimalBorder(img,yolo_results):
   img2 = np.ascontiguousarray(img, dtype=np.uint8)
   mask=img2[:,:,0]*0
@@ -80,9 +81,12 @@ def prepare_for_inference(img,target_size,border_size,segmentation_model):
   img=add_black_border(img, border_size) #first add a black border around, maybe needed for vhscollector images. for increasing segmentation accuracy
   segmentation_results=segmentation_model.predict(img)
   a=segmentOutImageMinimalBorder(img,segmentation_results[0]) #crop out the segmented image
-  a=convert_to_square_image(a)
-  a=cv2.resize(a, target_size, interpolation=cv2.INTER_LINEAR)
-  return a
+  if(a is None):
+      return None
+  else:
+      a=convert_to_square_image(a)
+      a=cv2.resize(a, target_size, interpolation=cv2.INTER_LINEAR)
+      return a
 
 
 #siamese model with trained weights, and extractor
