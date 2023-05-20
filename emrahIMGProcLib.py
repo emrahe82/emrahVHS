@@ -8,9 +8,9 @@ import h5py
 
 BASE_LINK_FOR_VHSCOLLECT_IMAGES = "https://vhscollector.com/sites/default/files/vhsimages/"
 
+
 #this function reads from google drive backup images
-#instead of vhscollector.com
-#if fails, tries url anyway
+#instead of vhscollector.com . if fails, tries from the url anyway
 def readImagesFrom_googledrive_backup_images(imageLinks):
   images = []
   heights = []
@@ -40,6 +40,7 @@ def readImagesFrom_googledrive_backup_images(imageLinks):
   return images, heights, widths
 
 
+
 #this function reads image from the url
 def read_image_from_url(url):
     try:
@@ -57,19 +58,6 @@ def read_image_from_url(url):
         print(f"Failed to read image from URL: {e}")
         return None
     
-    
-
-def check_weights_dimensions(weights_file):
-    # Open the weights file.
-    with h5py.File(weights_file, 'r') as f:
-        # The file is organized in layers and you can navigate through it like a dictionary.
-        for layer_name, layer_group in f.items():
-            print("Layer:", layer_name)
-            for sub_name, sub_group in layer_group.items():
-                print("  - {0:<12}".format(sub_name))
-                for p_name, param in sub_group.items():
-                    print("    - {0:<12}: {1}".format(p_name, param.shape))
-
 
                     
 #add specific sized black border around input iamge
@@ -82,6 +70,7 @@ def add_black_border(image, border_size=20):
     return border_image
 
 
+  
 #input is a random size image, and makes it square by adding 
 #black contours around the image
 def convert_to_square_image(img):
@@ -102,6 +91,8 @@ def convert_to_square_image(img):
     square_img[y:y+height, x:x+width] = img
     return square_img
 
+  
+  
 #crops out the image  
 #works only if image is frontvhs, else return none!
 def segmentOutImageMinimalBorder(img,yolo_results):
@@ -128,6 +119,7 @@ def segmentOutImageMinimalBorder(img,yolo_results):
   return None
 
 
+#prepares the image for the siamese
 def prepare_for_inference(img,target_size,border_size,segmentation_model):
   img=add_black_border(img, border_size) #first add a black border around, maybe needed for vhscollector images. for increasing segmentation accuracy
   segmentation_results=segmentation_model.predict(img)
@@ -140,6 +132,7 @@ def prepare_for_inference(img,target_size,border_size,segmentation_model):
       return a
 
 
+    
 #siamese model with trained weights, and extractor
 def create_and_load_siamese_model_with_extractor(input_shape, model_weights_path=None):
     
