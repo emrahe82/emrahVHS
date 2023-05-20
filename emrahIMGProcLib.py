@@ -111,6 +111,11 @@ def create_and_load_siamese_model_with_extractor(input_shape, weights='imagenet'
     # Define the Siamese network
     siamese_model = Model(inputs=[input_left, input_right], outputs=predictions)
 
+    # Loading the trained weights
+    if model_weights_path:
+        siamese_model.load_weights(model_weights_path)
+    
+    #feature extractor
     # Define a new input layer for a single image
     input_single = lyr.Input(input_shape)
 
@@ -119,9 +124,5 @@ def create_and_load_siamese_model_with_extractor(input_shape, weights='imagenet'
 
     # Define the feature extraction model for a single image
     feature_extractor_single = Model(inputs=input_single, outputs=encoded_single)
-
-    # Loading the Weights
-    if model_weights_path:
-        siamese_model.load_weights(model_weights_path)
 
     return siamese_model, feature_extractor_single
