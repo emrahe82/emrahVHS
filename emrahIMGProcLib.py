@@ -7,18 +7,16 @@ import cv2
 import h5py
 
 
-#checking the dimensions of the loaded weights
 def check_weights_dimensions(weights_file):
     # Open the weights file.
-    f = h5py.File(weights_file, 'r')
-
-    # The file is organized in layers and you can navigate through it like a dictionary.
-    for layer, g in f.items():
-        print("Layer:", layer)
-        print("  Weights:")
-        for p_name in g.keys():
-            param = g[p_name]
-            print("  - {0:<12}: {1}".format(p_name, param.shape))
+    with h5py.File(weights_file, 'r') as f:
+        # The file is organized in layers and you can navigate through it like a dictionary.
+        for layer_name, layer_group in f.items():
+            print("Layer:", layer_name)
+            for sub_name, sub_group in layer_group.items():
+                print("  - {0:<12}".format(sub_name))
+                for p_name, param in sub_group.items():
+                    print("    - {0:<12}: {1}".format(p_name, param.shape))
 
 
 #input is a random size image, and makes it square by adding 
