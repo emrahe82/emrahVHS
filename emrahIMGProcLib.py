@@ -70,7 +70,44 @@ def add_black_border(image, border_size=20):
     return border_image
 
 
+#The function hConcatImageArray(imageLinks) is designed to take in a list of image links (either URLs or file paths to images located in Google Drive, 
+#depending on the setting of WORK_WITH_URL), and horizontally concatenate (i.e., stitch together side by side) all these images into one single image.
+#Also returns the x coordinates, where they are stiched
+def hConcatImageArray(imageLinks):
+    # Read images from URLs and get their widths and heights
+    if(WORK_WITH_URL):
+      images, heights, widths = readImagesFromURLs(imageLinks)
+    else:
+      images, heights, widths = readImagesFrom_googledrive_backup_images(imageLinks)
 
+    # Compute the x coordinates of the concatenations
+    x_coords = np.cumsum([0] + widths[:-1])
+    
+    # Create a black canvas with the total height and width
+    try:    
+      total_height = max(heights)
+      total_width = sum(widths)
+      canvas = np.zeros((total_height, total_width, 3), dtype=np.uint8)
+    except:
+      return None,None  
+
+    # Paste the images onto the canvas at the appropriate x coordinates
+    for i, img in enumerate(images):
+      if(img is not None):
+        x, y = x_coords[i], 0
+        if(img.shape[2]==4):
+          canvas[y:y+img.shape[0], x:x+img.shape[1], :] = img[:,:,0:-1] #incase of png
+        else:
+          canvas[y:y+img.shape[0], x:x+img.shape[1], :] = img #incase of png
+    try:
+      x_coords = np.concatenate((x_coords, [total_width-1]))
+      return canvas, x_coords
+    except:
+      print("couldnt read the image Links!")
+      for i in range(imageLinks):
+        print(i)
+      return None,None
+    
 
 #This function takes in YOLO flat tape segmentation results and a maximum x value as input. 
 #It extracts the x-coordinates of the bounding boxes from the segmentation results, 
