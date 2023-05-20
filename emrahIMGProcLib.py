@@ -6,7 +6,58 @@ import numpy as np
 import cv2
 import h5py
 
+BASE_LINK_FOR_VHSCOLLECT_IMAGES = "https://vhscollector.com/sites/default/files/vhsimages/"
 
+#this function reads from google drive backup images
+#instead of vhscollector.com
+#if fails, tries url anyway
+def readImagesFrom_googledrive_backup_images(imageLinks):
+  images = []
+  heights = []
+  widths = []
+  for i,link in enumerate(imageLinks):
+    vhs_id = (link.replace(BASE_LINK_FOR_VHSCOLLECT_IMAGES,"")).split("_")[0]
+    print("vhs_id: " +str(vhs_id))
+    if(len(vhs_id)>8):
+      print("different style of url! this probably not stored in drive. using the url")
+      try:
+        imgy = read_image_from_url(link)
+        images.append(imgy)
+        heights.append(imgy.shape[0])
+        widths.append(imgy.shape[1])
+      except:
+        print("couldn't read from url too!")
+    else:
+      new_image_path_from_backup = BACKUP_IMAGE_URL_BASE_PATH+str(vhs_id)+"_"+str(i)+".jpg"
+      print(new_image_path_from_backup)
+      try:
+        imgy = cv2.imread(new_image_path_from_backup)
+        images.append(imgy)
+        heights.append(imgy.shape[0])
+        widths.append(imgy.shape[1])
+      except:
+        print("couldn't read: "+str(new_image_path_from_backup))
+  return images, heights, widths
+
+
+#this function reads image from the url
+def read_image_from_url(url):
+    try:
+        response = requests.get(url)
+        response.raise_for_status() # Raise an exception for 4xx and 5xx status codes
+        img = PPPImage.open(BytesIO(response.content))
+        img.load() # Load the image data into memory
+        if(img):
+          img_array = np.asarray(img).clip(0, 255).astype(np.uint8)
+          img_array = np.flip(img_array, axis=-1)
+          #cv2_imshow(img_array)
+        return img_array
+
+    except (requests.exceptions.RequestException, OSError) as e:
+        print(f"Failed to read image from URL: {e}")
+        return None
+    
+    
 
 def check_weights_dimensions(weights_file):
     # Open the weights file.
