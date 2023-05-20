@@ -4,6 +4,22 @@ from keras.models import Model
 from keras import backend as K
 import numpy as np
 import cv2
+import h5py
+
+
+#checking the dimensions of the loaded weights
+def check_weights_dimensions(weights_file):
+    # Open the weights file.
+    f = h5py.File(weights_file, 'r')
+
+    # The file is organized in layers and you can navigate through it like a dictionary.
+    for layer, g in f.items():
+        print("Layer:", layer)
+        print("  Weights:")
+        for p_name in g.keys():
+            param = g[p_name]
+            print("  - {0:<12}: {1}".format(p_name, param.shape))
+
 
 #input is a random size image, and makes it square by adding 
 #black contours around the image
