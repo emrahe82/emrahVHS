@@ -98,7 +98,7 @@ def hConcatImageArray(imageLinks):
         if(img.shape[2]==4):
           canvas[y:y+img.shape[0], x:x+img.shape[1], :] = img[:,:,0:-1] #incase of png
         else:
-          canvas[y:y+img.shape[0], x:x+img.shape[1], :] = img #incase of png
+          canvas[y:y+img.shape[0], x:x+img.shape[1], :] = img #incase of non png
     try:
       x_coords = np.concatenate((x_coords, [total_width-1]))
       return canvas, x_coords
