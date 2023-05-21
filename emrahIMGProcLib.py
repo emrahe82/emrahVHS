@@ -4,7 +4,13 @@ from keras.models import Model
 from keras import backend as K
 import numpy as np
 import cv2
-import h5py
+import requests
+import os
+import io
+from google.cloud import vision
+from google.cloud.vision import types
+from PIL import Image as PPPImage
+from io import BytesIO
 
 BASE_LINK_FOR_VHSCOLLECT_IMAGES = "https://vhscollector.com/sites/default/files/vhsimages/"
 WORK_WITH_URL = False
