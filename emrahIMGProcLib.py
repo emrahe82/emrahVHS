@@ -21,6 +21,7 @@ import openpyxl #need for reading xlsm
 from openpyxl.drawing.image import Image
 from openpyxl.styles import Alignment
 import imagehash
+from typing import Tuple
 
 BASE_LINK_FOR_VHSCOLLECT_IMAGES = "https://vhscollector.com/sites/default/files/vhsimages/"
 WORK_WITH_URL = False
