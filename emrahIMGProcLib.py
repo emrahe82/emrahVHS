@@ -279,6 +279,7 @@ def segmentOutImageMinimalBorder(img,yolo_results):
 #prepares the image for the siamese
 def prepare_for_inference(img,target_size,border_size,segmentation_model):
   img=add_black_border(img, border_size) #first add a black border around, maybe needed for vhscollector images. for increasing segmentation accuracy
+  img=convert_to_square_image(img)
   segmentation_results=segmentation_model.predict(img)
   a=segmentOutImageMinimalBorder(img,segmentation_results[0]) #crop out the segmented image
   if(a is None):
