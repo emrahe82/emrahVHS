@@ -372,3 +372,45 @@ def hashSiftFinder(arr0_uint8):
     dhash_0 = imagehash.dhash(pil_image_0)
 
     return sift_keypoints_0,  sift_descriptors_0, phash_0, dhash_0
+
+
+
+#Compute perspective transformation and apply it to the image.
+#:param img: Input image
+#:param corners: List of corner points for perspective correction
+#:return: Perspective corrected image
+#This function is required for better phash and dhash results
+def correct_perspective_from_contour(img: np.ndarray, corners: np.ndarray) -> np.ndarray:
+
+    if corners is None:
+        print("Not enough corners detected, skipping perspective correction.")
+        return img
+
+    # Order corners (top-left, top-right, bottom-right, bottom-left)
+    rect = np.zeros((4, 2), dtype = "float32")
+    s = corners.sum(axis = 1)
+    rect[0] = corners[np.argmin(s)]
+    rect[2] = corners[np.argmax(s)]
+    diff = np.diff(corners, axis = 1)
+    rect[1] = corners[np.argmin(diff)]
+    rect[3] = corners[np.argmax(diff)]
+
+    # Compute the new image dimensions
+    (tl, tr, br, bl) = rect
+    widthA = np.sqrt(((br[0] - bl[0]) ** 2) + ((br[1] - bl[1]) ** 2))
+    widthB = np.sqrt(((tr[0] - tl[0]) ** 2) + ((tr[1] - tl[1]) ** 2))
+    maxWidth = max(int(widthA), int(widthB))
+    heightA = np.sqrt(((tr[0] - br[0]) ** 2) + ((tr[1] - br[1]) ** 2))
+    heightB = np.sqrt(((tl[0] - bl[0]) ** 2) + ((tl[1] - bl[1]) ** 2))
+    maxHeight = max(int(heightA), int(heightB))
+
+    # Construct the set of destination points
+    dst = np.array([
+        [0, 0],
+        [maxWidth - 1, 0],
+        [maxWidth - 1, maxHeight - 1],
+        [0, maxHeight - 1]], dtype = "float32")
+
+    # Compute the perspective transformation matrix and warp
+    M = cv2.getPerspectiveTransform(rect, dst)
+    return cv2.warpPerspective(img, M, (maxWidth, maxHeight))
