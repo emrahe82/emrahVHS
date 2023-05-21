@@ -7,3 +7,5 @@ pillow
 ultralytics
 pandas
 openpyxl
+imagehash
+unrar
