@@ -1,1 +1,4 @@
-
+ultralytics
+requests
+fuzzywuzzy
+google-cloud-vision
