@@ -358,7 +358,7 @@ def create_and_load_siamese_model_with_extractor(input_shape, model_weights_path
 #before running it always use correct_perspective_from_contour()
 def hashFinder(arr0_uint8):
     # Create PIL image
-    pil_image_0 = Image.fromarray(arr0_uint8)
+    pil_image_0 = PPPImage.fromarray(arr0_uint8)
 
     # Calculate phash
     phash_0 = imagehash.phash(pil_image_0)
