@@ -11,7 +11,6 @@ from google.cloud import vision
 from google.cloud.vision import types
 from PIL import Image as PPPImage
 from io import BytesIO
-import requests
 
 BASE_LINK_FOR_VHSCOLLECT_IMAGES = "https://vhscollector.com/sites/default/files/vhsimages/"
 WORK_WITH_URL = False
