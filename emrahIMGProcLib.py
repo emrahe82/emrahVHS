@@ -7,6 +7,7 @@ import cv2
 import requests
 import os
 import io
+from io import BytesIO
 from google.cloud import vision
 from google.cloud.vision_v1 import types
 from PIL import Image as PPPImage
@@ -14,6 +15,10 @@ from io import BytesIO
 from ultralytics import YOLO 
 import pandas as pd
 from google.colab.patches import cv2_imshow
+import urllib.request
+import openpyxl #need for reading xlsm
+from openpyxl.drawing.image import Image
+from openpyxl.styles import Alignment
 
 BASE_LINK_FOR_VHSCOLLECT_IMAGES = "https://vhscollector.com/sites/default/files/vhsimages/"
 WORK_WITH_URL = False
