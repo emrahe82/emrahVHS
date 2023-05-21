@@ -375,13 +375,57 @@ def hashSiftFinder(arr0_uint8):
 
 
 
+#Detect the rectangle in the image for perspective correction.
+#:param img: Input image
+#:return: Tuple of list of corner points if a rectangle is detected, the image with the drawn initial contour and the image with the drawn approximated contour, else None
+#Feed output to the correct_perspective_from_contour()
+def detect_rectangle_via_contour(img: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+
+    # Convert to grayscale
+    gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    # Threshold to get non-zero pixels
+    _, thresh = cv2.threshold(gray_img, 1, 255, cv2.THRESH_BINARY)
+
+    # Find contours
+    contours, _ = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+
+    # Sort contours by area in descending order and keep the largest one
+    contours = sorted(contours, key=cv2.contourArea, reverse=True)[:1]
+
+    if not contours:
+        print("No contour detected, cannot correct perspective.")
+        return None, img, img
+
+    # Copy image to draw the initial contour
+    img_initial_contour = img.copy()
+
+    # Draw the initial contour on the image
+    cv2.drawContours(img_initial_contour, contours, -1, (0, 255, 0), 3)
+
+    # Approximate contour to a quadrilateral
+    epsilon = 0.02 * cv2.arcLength(contours[0], True)
+    approx = cv2.approxPolyDP(contours[0], epsilon, True)
+
+    while len(approx) > 4:
+        epsilon += 0.01
+        approx = cv2.approxPolyDP(contours[0], epsilon, True)
+    while len(approx) < 4:
+        epsilon -= 0.01
+        approx = cv2.approxPolyDP(contours[0], epsilon, True)
+
+    # Draw the approximated contour on the image
+    cv2.drawContours(img, [approx], -1, (0, 255, 0), 3)
+
+    return approx.reshape(-1, 2)  # reshape for the correct_perspective function
+
+
 #Compute perspective transformation and apply it to the image.
 #:param img: Input image
 #:param corners: List of corner points for perspective correction
 #:return: Perspective corrected image
 #This function is required for better phash and dhash results
 def correct_perspective_from_contour(img: np.ndarray, corners: np.ndarray) -> np.ndarray:
-
     if corners is None:
         print("Not enough corners detected, skipping perspective correction.")
         return img
