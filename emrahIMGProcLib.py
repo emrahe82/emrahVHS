@@ -12,6 +12,7 @@ from google.cloud.vision_v1 import types
 from PIL import Image as PPPImage
 from io import BytesIO
 from ultralytics import YOLO 
+import pandas as pd
 
 BASE_LINK_FOR_VHSCOLLECT_IMAGES = "https://vhscollector.com/sites/default/files/vhsimages/"
 WORK_WITH_URL = False
