@@ -282,6 +282,7 @@ def prepare_for_inference(img,target_size,border_size,segmentation_model):
   segmentation_results=segmentation_model.predict(img)
   a=segmentOutImageMinimalBorder(img,segmentation_results[0]) #crop out the segmented image
   if(a is None):
+      print("nothing cropped out from segmentation!!")
       return None
   else:
       a=convert_to_square_image(a)
