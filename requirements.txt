@@ -1,4 +1,9 @@
-ultralytics
+keras
+numpy
+opencv-python
 requests
-fuzzywuzzy
 google-cloud-vision
+pillow
+ultralytics
+pandas
+openpyxl
