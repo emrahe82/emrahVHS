@@ -348,3 +348,16 @@ def create_and_load_siamese_model_with_extractor(input_shape, model_weights_path
     feature_extractor_single = Model(inputs=input_single, outputs=encoded_single)
 
     return siamese_model, feature_extractor_single
+
+#Hash checker for a single image
+def hashFinder(arr0_uint8):
+    # Create PIL image
+    pil_image_0 = Image.fromarray(arr0_uint8)
+
+    # Calculate phash
+    phash_0 = imagehash.phash(pil_image_0)
+
+    # Calculate dhash
+    dhash_0 = imagehash.dhash(pil_image_0)
+
+    return phash_0, dhash_0
