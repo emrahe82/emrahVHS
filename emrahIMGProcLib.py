@@ -12,6 +12,7 @@ from google.cloud import vision
 from google.cloud.vision_v1 import types
 from PIL import Image as PPPImage
 from io import BytesIO
+import ultralytics
 from ultralytics import YOLO 
 import pandas as pd
 from google.colab.patches import cv2_imshow
