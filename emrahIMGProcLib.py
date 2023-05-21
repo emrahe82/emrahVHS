@@ -374,7 +374,7 @@ def siftFinder(arr0_uint8):
     img0_gray = cv2.cvtColor(arr0_uint8, cv2.COLOR_RGB2GRAY)
     sift_0 = cv2.SIFT_create()
     # Detect keypoints and compute descriptors for both images
-    keypoints_0, descriptors_0 = sift_0.detectAndCompute(img0_gray, None)
+    sift_keypoints_0, sift_descriptors_0 = sift_0.detectAndCompute(img0_gray, None)
     return sift_keypoints_0,  sift_descriptors_0
 
 
