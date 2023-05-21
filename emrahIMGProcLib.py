@@ -13,6 +13,7 @@ from PIL import Image as PPPImage
 from io import BytesIO
 from ultralytics import YOLO 
 import pandas as pd
+from google.colab.patches import cv2_imshow
 
 BASE_LINK_FOR_VHSCOLLECT_IMAGES = "https://vhscollector.com/sites/default/files/vhsimages/"
 WORK_WITH_URL = False
