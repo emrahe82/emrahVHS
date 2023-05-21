@@ -352,16 +352,10 @@ def create_and_load_siamese_model_with_extractor(input_shape, model_weights_path
 
 
 
-#sift and hash checker for a "single" image
-#this will be used for speed ups and comnbined image 
-#comparison model
-def hashSiftFinder(arr0_uint8):
-    #grayscale the image and find sift
-    img0_gray = cv2.cvtColor(arr0_uint8, cv2.COLOR_RGB2GRAY)
-    sift_0 = cv2.SIFT_create()
-    # Detect keypoints and compute descriptors for both images
-    keypoints_0, descriptors_0 = sift_0.detectAndCompute(img0_gray, None)
-
+#hash checker for a "single" image
+#this will be used for speed ups and comnbined model
+#before running it always use correct_perspective_from_contour()
+def hashFinder(arr0_uint8):
     # Create PIL image
     pil_image_0 = Image.fromarray(arr0_uint8)
 
@@ -371,7 +365,16 @@ def hashSiftFinder(arr0_uint8):
     # Calculate dhash
     dhash_0 = imagehash.dhash(pil_image_0)
 
-    return sift_keypoints_0,  sift_descriptors_0, phash_0, dhash_0
+    return phash_0, dhash_0
+
+
+def siftFinder(arr0_uint8):
+    #grayscale the image and find sift
+    img0_gray = cv2.cvtColor(arr0_uint8, cv2.COLOR_RGB2GRAY)
+    sift_0 = cv2.SIFT_create()
+    # Detect keypoints and compute descriptors for both images
+    keypoints_0, descriptors_0 = sift_0.detectAndCompute(img0_gray, None)
+    return sift_keypoints_0,  sift_descriptors_0
 
 
 
