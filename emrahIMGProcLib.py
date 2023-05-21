@@ -25,7 +25,7 @@ from typing import Tuple
 
 BASE_LINK_FOR_VHSCOLLECT_IMAGES = "https://vhscollector.com/sites/default/files/vhsimages/"
 BACKUP_IMAGE_URL_BASE_PATH = "/content/drive/MyDrive/fiverr/rhyanschwartz/VHScollector images download/"
-WORK_WITH_URL = False
+WORK_WITH_URL = False 
 
 
 #Reads OCR from the given image path
