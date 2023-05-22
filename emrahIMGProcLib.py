@@ -496,7 +496,8 @@ def extractFeaturesfromDataBase(current_input_row, movieDictionary, combined_dat
         print(imageLinks)
       except:
         print("failed obtaining image links!, probably empty!")
-
+        return movieDictionary
+    
       #EXTRACTING IMAGES from the LINKS
       numImageLinks=len(imageLinks)
       if(numImageLinks==0):
