@@ -577,28 +577,3 @@ def _pickle_keypoints(point):
 #one time use:
 #copyreg.pickle(cv2.KeyPoint().__class__, _pickle_keypoints)
 
-
-
-"""
-obsolate
-
-#pickle module can't serialize a cv2.KeyPoint object. 
-#This is because not all Python objects can be serialized by pickle.
-#To handle this, you can convert your cv2.KeyPoint objects to a serializable format before saving. 
-#One possible way is to write a function to convert keypoints and descriptors to lists or dictionaries, which can be serialized by pickle.
-def keypoints_to_list(keypoints, descriptors):
-    """Convert keypoints and descriptors to a list format."""
-    keypoints_list = [{'pt': kp.pt, 'size': kp.size, 'angle': kp.angle,
-                       'response': kp.response, 'octave': kp.octave, 'class_id': kp.class_id}
-                      for kp in keypoints]
-    descriptors_list = descriptors.tolist()  # convert np.ndarray to list
-    return keypoints_list, descriptors_list
-
-def list_to_keypoints(keypoints_list, descriptors_list):
-    """Convert keypoints and descriptors from a list format to their original format."""
-    keypoints = [cv2.KeyPoint(x=kp['pt'][0], y=kp['pt'][1], _size=kp['size'], _angle=kp['angle'],
-                              _response=kp['response'], _octave=kp['octave'], _class_id=kp['class_id'])
-                 for kp in keypoints_list]
-    descriptors = np.array(descriptors_list)
-    return keypoints, descriptors
-"""
