@@ -485,7 +485,7 @@ def correct_perspective_from_contour(img: np.ndarray, corners: np.ndarray) -> np
 #siamese_extractor (model): The siamese model used to extract features from the images.
 #Returns:
 #movieDictionary (dict): The updated dictionary with the features of the current_input_row added.
-def extractFeaturesfromDataBase(current_input_row, movieDictionary, combined_database, flat_image_split_model, segmentation_model, target_size, input_shape, siamese_extractor):
+def extractFeaturesfromDataBase(current_input_row, movieDictionary, combined_database, flat_image_split_model, segmentation_model, target_size, input_shape, siamese_extractor, display_images=False):
     imgArray=[]
     if (current_input_row in movieDictionary):
       print("already have the item! doing nothing")
@@ -540,7 +540,8 @@ def extractFeaturesfromDataBase(current_input_row, movieDictionary, combined_dat
             if(imgReadForInference is None):
               phash_, dhash_, sift_keypoints_,  sift_descriptors_, siamese_features_  = None, None, None, None, None
             else:
-              cv2_imshow(imgReadForInference)
+              if(display_images):
+                cv2_imshow(imgReadForInference)
 
               corners_ = detect_rectangle_via_contour(imgReadForInference)
               corr_arr_ = correct_perspective_from_contour(imgReadForInference, corners_)
