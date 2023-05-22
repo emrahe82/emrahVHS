@@ -472,7 +472,7 @@ def correct_perspective_from_contour(img: np.ndarray, corners: np.ndarray) -> np
 
 
 
-
+#This works for VHSCollector Database
 #This function is used to extract features from a given row of a database, and add them to a dictionary for future reference.
 #Parameters:
 #current_input_row (int): The row index in the combined_database dataframe that we want to process.
