@@ -489,6 +489,7 @@ def extractFeaturesfromDataBase(current_input_row, movieDictionary, combined_dat
     imgArray=[]
     if (current_input_row in movieDictionary):
       print("already have the item!")
+      return 0
     else:
       try:
         imageLinks=(combined_database.iloc[current_input_row])["Images"].split(",")
