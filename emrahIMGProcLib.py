@@ -22,6 +22,8 @@ from openpyxl.drawing.image import Image
 from openpyxl.styles import Alignment
 import imagehash
 from typing import Tuple
+import pickle
+import sys
 
 BASE_LINK_FOR_VHSCOLLECT_IMAGES = "https://vhscollector.com/sites/default/files/vhsimages/"
 BACKUP_IMAGE_URL_BASE_PATH = "/content/drive/MyDrive/fiverr/rhyanschwartz/VHScollector images download/"
@@ -529,7 +531,7 @@ def extractFeaturesfromDataBase(current_input_row, movieDictionary, combined_dat
         imgReadForInference=prepare_for_inference(img,target_size,20,segmentation_model)
 
         if(imgReadForInference is None):
-          phash_, dhash_, sift_keypoints_,  sift_descriptors_, siamese_features_ = None, None, None, None, None
+          phash_, dhash_, sift_keypoints_,  sift_keypoints_, sift_descriptors_, sift_keypoints_list,  sift_descriptors_list = None, None, None, None, None, None, None
 
         else:
           cv2_imshow(imgReadForInference)
@@ -548,14 +550,16 @@ def extractFeaturesfromDataBase(current_input_row, movieDictionary, combined_dat
           siamese_features_ = siamese_extractor.predict(img_array)
 
         subDictionary={}
+        if(sift_keypoints_ is not None):
+            sift_keypoints_list, sift_descriptors_list = keypoints_to_list(sift_keypoints_, sift_descriptors_)
         print("adding an item to dictionary..")
         subDictionary["itemNumber"] = current_input_row
         subDictionary["movieSubImageNumber"] = i
         subDictionary["siameseFeatures"] = siamese_features_
         subDictionary["dHash"] = dhash_
         subDictionary["pHash"] = phash_
-        subDictionary["siftKeypoints"] = sift_keypoints_
-        subDictionary["siftDescriptors"] = sift_descriptors_
+        subDictionary["siftKeypointsList"] = sift_keypoints_list #pickle module can't serialize a cv2.KeyPoint object. Converting to List
+        subDictionary["siftDescriptorsList"] = sift_descriptors_list #pickle module can't serialize a cv2.KeyPoint object. Converting to List
 
         if current_input_row not in movieDictionary:
           movieDictionary[current_input_row] = [subDictionary]
@@ -564,3 +568,24 @@ def extractFeaturesfromDataBase(current_input_row, movieDictionary, combined_dat
     
     return movieDictionary
 
+
+
+#pickle module can't serialize a cv2.KeyPoint object. 
+#This is because not all Python objects can be serialized by pickle.
+#To handle this, you can convert your cv2.KeyPoint objects to a serializable format before saving. 
+#One possible way is to write a function to convert keypoints and descriptors to lists or dictionaries, which can be serialized by pickle.
+def keypoints_to_list(keypoints, descriptors):
+    """Convert keypoints and descriptors to a list format."""
+    keypoints_list = [{'pt': kp.pt, 'size': kp.size, 'angle': kp.angle,
+                       'response': kp.response, 'octave': kp.octave, 'class_id': kp.class_id}
+                      for kp in keypoints]
+    descriptors_list = descriptors.tolist()  # convert np.ndarray to list
+    return keypoints_list, descriptors_list
+
+def list_to_keypoints(keypoints_list, descriptors_list):
+    """Convert keypoints and descriptors from a list format to their original format."""
+    keypoints = [cv2.KeyPoint(x=kp['pt'][0], y=kp['pt'][1], _size=kp['size'], _angle=kp['angle'],
+                              _response=kp['response'], _octave=kp['octave'], _class_id=kp['class_id'])
+                 for kp in keypoints_list]
+    descriptors = np.array(descriptors_list)
+    return keypoints, descriptors
