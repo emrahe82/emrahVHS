@@ -488,8 +488,8 @@ def correct_perspective_from_contour(img: np.ndarray, corners: np.ndarray) -> np
 def extractFeaturesfromDataBase(current_input_row, movieDictionary, combined_database, flat_image_split_model, segmentation_model, target_size, input_shape, siamese_extractor):
     imgArray=[]
     if (current_input_row in movieDictionary):
-      print("already have the item!")
-      return 0
+      print("already have the item! doing nothing")
+      return movieDictionary
     else:
       try:
         imageLinks=(combined_database.iloc[current_input_row])["Images"].split(",")
