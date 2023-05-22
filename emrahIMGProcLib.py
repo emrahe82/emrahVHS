@@ -534,7 +534,8 @@ def extractFeaturesfromDataBase(current_input_row, movieDictionary, combined_dat
 
         if(imgReadForInference is None):
           phash_, dhash_, sift_keypoints_,  sift_descriptors_, siamese_features_  = None, None, None, None, None
-
+        elif(imgReadForInference.shape[0]<100):
+          phash_, dhash_, sift_keypoints_,  sift_descriptors_, siamese_features_  = None, None, None, None, None     
         else:
           cv2_imshow(imgReadForInference)
 
