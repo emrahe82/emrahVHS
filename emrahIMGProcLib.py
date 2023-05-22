@@ -532,7 +532,7 @@ def extractFeaturesfromDataBase(current_input_row, movieDictionary, combined_dat
       for i,img in enumerate(imgArray):
         if(img is None):
             phash_, dhash_, sift_keypoints_,  sift_descriptors_, siamese_features_  = None, None, None, None, None 
-        elif(imgReadForInference.shape[0]<100):
+        elif(img.shape[0]<100):
             phash_, dhash_, sift_keypoints_,  sift_descriptors_, siamese_features_  = None, None, None, None, None   
         else:        
             imgReadForInference=prepare_for_inference(img,target_size,20,segmentation_model)
