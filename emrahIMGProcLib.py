@@ -533,7 +533,7 @@ def extractFeaturesfromDataBase(current_input_row, movieDictionary, combined_dat
         imgReadForInference=prepare_for_inference(img,target_size,20,segmentation_model)
 
         if(imgReadForInference is None):
-          phash_, dhash_, sift_keypoints_,  sift_descriptors_  = None, None, None, None
+          phash_, dhash_, sift_keypoints_,  sift_descriptors_, siamese_features_  = None, None, None, None, None
 
         else:
           cv2_imshow(imgReadForInference)
