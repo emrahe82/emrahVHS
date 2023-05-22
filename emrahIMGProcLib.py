@@ -530,27 +530,30 @@ def extractFeaturesfromDataBase(current_input_row, movieDictionary, combined_dat
 
 
       for i,img in enumerate(imgArray):
-        imgReadForInference=prepare_for_inference(img,target_size,20,segmentation_model)
-
-        if(imgReadForInference is None):
-          phash_, dhash_, sift_keypoints_,  sift_descriptors_, siamese_features_  = None, None, None, None, None
+        if(img is None):
+            phash_, dhash_, sift_keypoints_,  sift_descriptors_, siamese_features_  = None, None, None, None, None 
         elif(imgReadForInference.shape[0]<100):
-          phash_, dhash_, sift_keypoints_,  sift_descriptors_, siamese_features_  = None, None, None, None, None     
-        else:
-          cv2_imshow(imgReadForInference)
+            phash_, dhash_, sift_keypoints_,  sift_descriptors_, siamese_features_  = None, None, None, None, None   
+        else:        
+            imgReadForInference=prepare_for_inference(img,target_size,20,segmentation_model)
 
-          corners_ = detect_rectangle_via_contour(imgReadForInference)
-          corr_arr_ = correct_perspective_from_contour(imgReadForInference, corners_)
+            if(imgReadForInference is None):
+              phash_, dhash_, sift_keypoints_,  sift_descriptors_, siamese_features_  = None, None, None, None, None
+            else:
+              cv2_imshow(imgReadForInference)
 
-          phash_, dhash_ = hashFinder(corr_arr_)
-          sift_keypoints_,  sift_descriptors_= siftFinder(corr_arr_)
+              corners_ = detect_rectangle_via_contour(imgReadForInference)
+              corr_arr_ = correct_perspective_from_contour(imgReadForInference, corners_)
 
-          img_array = imgReadForInference / 255.0
-          img_array = np.expand_dims(img_array, axis=0)
+              phash_, dhash_ = hashFinder(corr_arr_)
+              sift_keypoints_,  sift_descriptors_= siftFinder(corr_arr_)
 
-          assert img_array.shape == (1,) + input_shape, f'Expected shape: {(1,) + input_shape}, but got: {img_array.shape}'
+              img_array = imgReadForInference / 255.0
+              img_array = np.expand_dims(img_array, axis=0)
 
-          siamese_features_ = siamese_extractor.predict(img_array)
+              assert img_array.shape == (1,) + input_shape, f'Expected shape: {(1,) + input_shape}, but got: {img_array.shape}'
+
+              siamese_features_ = siamese_extractor.predict(img_array)
 
         subDictionary={}
         print("adding an item to dictionary..")
