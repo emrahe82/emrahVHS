@@ -510,7 +510,7 @@ def extractFeaturesfromDataBase(current_input_row, movieDictionary, combined_dat
         if(combined is None):
           print("problem with the images! : " + str(imageLinks))
           print("bypassing current row!!")
-          raise SystemExit
+          return movieDictionary
         if(combined.shape[2]==4):
           combined=combined[:,:,0:3]
 
